@@ -1,0 +1,92 @@
+﻿
+
+@{
+    ViewData["Title"] = "Label";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome To WQSS</h1>
+
+    <div id="barcodeTarget" class="barcodeTarget"></div>
+
+</div>
+
+
+@if (ViewBag.bottleID != null)
+{
+    <p class="text-center">Click the button below to print label</p>
+
+    <div class="text-center img-test">
+        <button class="btn-outline-dark rounded" id="label_btn">Print Label</button>
+    </div>
+
+}
+
+@section Scripts {
+
+    
+    <script src="~/Scripts/JS/jspdf.min.js"></script>
+    <script src="~/Scripts/JS/jquery-barcode.js"></script>
+
+
+    <script type="text/javascript">
+
+			const pdf = new jsPDF({
+				orientation: 'potrait',
+				unit: 'mm',         //Can put 'in' for inches
+				format: [90,29]   //The size[width,height]
+            });
+			pdf.addFont('times','courier');
+			pdf.setFont('times');
+			pdf.setFontSize(7);
+
+
+			// select the button
+			let button1 = document.querySelector('#label_btn');
+
+			// add 'click' event listener for the button
+            button1.addEventListener('click', printPDF);
+
+            
+
+			// actual PDF options
+			function printPDF() {
+				x_cor = 4;
+				y_cor = 3;
+				x_spacing = 4;
+
+
+				pdf.text(x_cor, y_cor, "Reason ", null, -90);
+				if ("@ViewBag.reas_sampling" != null) { pdf.text(x_cor, 20, ": @ViewBag.reas_sampling", null, -90); } 
+				pdf.text(x_cor += x_spacing, y_cor, "Matrix", null, -90);
+				pdf.text(x_cor, 20, ": @ViewBag.matrix", null, -90);
+				pdf.text(x_cor += x_spacing, y_cor, "Sample Pt", null, -90);
+				pdf.text(x_cor, 20, ": @ViewBag.sample_pt_name", null, -90);
+				pdf.text(x_cor += x_spacing, y_cor, "Location", null, -90);
+				pdf.text(x_cor, 20, ": @ViewBag.location", null, -90);
+				pdf.text(x_cor += x_spacing, y_cor, "Collected Date", null, -90);
+				pdf.text(x_cor, 20, ": @ViewBag.collectedDate", null, -90);
+				pdf.text(x_cor += x_spacing, y_cor, "Bottle ID", null, -90);
+				pdf.text(x_cor, 20, ": @ViewBag.bottleID", null, -90);
+
+
+
+				var img = new Image();
+                var logo = new Image();
+
+                
+				img.src = "data:image/png;base64,"+"@ViewBag.base64";
+				logo.src = "data:image/png;base64,"+"@ViewBag.base641";
+
+				pdf.addImage(img,'png',0,67,20,20,null,null);
+                pdf.addImage(logo, 'png', 19, 69, 8, 16, null, null);
+                   
+                
+				pdf.save();
+			}
+
+
+
+    </script>
+}
+
