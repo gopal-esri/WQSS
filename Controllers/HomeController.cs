@@ -18,7 +18,7 @@ namespace WQSS.Controllers
     {   
         public ActionResult Index()
         {
-
+           
             return View();
 
         }
@@ -45,11 +45,11 @@ namespace WQSS.Controllers
             }
 
             // For Routine-Adhoc / Adhoc-Adhoc : Login_routine/adhoc -> Requery_request -> print label
-            if ((type == "Routine-Adhoc") || (type == "Adhoc-Adhoc"))
+            if ((type == "Adhoc-Routine") || (type == "Adhoc-Adhoc"))
             {
                 Dictionary<string, string> login_type = new Dictionary<string, string>
                 {
-                    {"Routine-Adhoc","LOGIN_ROUTINE"},
+                    {"Adhoc-Routine","LOGIN_ROUTINE"},
                     {"Adhoc-Adhoc","LOGIN_ADHOC"}
                 };
 
@@ -320,6 +320,7 @@ namespace WQSS.Controllers
             if (input["WQSS_REQ_NAME"] == "LOGIN_ADHOC")
             {
                 //input["sth"] ?? webrequest.Headers.Add("sth", input["sth"]);
+                webrequest.Headers.Add("WQSS_SAMPLE_NO", "1");
             }
 
 

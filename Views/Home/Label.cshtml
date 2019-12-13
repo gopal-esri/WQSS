@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Label";
 }
 
@@ -10,11 +8,12 @@
     <div id="barcodeTarget" class="barcodeTarget"></div>
     <br />
 </div>
-<p class="card-text">Please verify all infomation on the label is correct before printing.</p>
+<p class="card-text">Please verify all information on the label is correct before printing.</p>
 <div class="card mb-3">
     <div class="card-body">
         <div class="row">
-            <div class="col-2"><br />
+            <div class="col-2">
+                <br />
                 <p class="card-text">Bottle ID : </p>
                 <p class="card-text">Collected Date : </p>
                 <p class="card-text">Location : </p>
@@ -22,8 +21,17 @@
                 <p class="card-text">Matrix : </p>
                 <p class="card-text">Reason : </p>
             </div>
-            <div class="col-8"><br />
-                <p><b>@ViewBag.bottleID</b></p>
+            <div class="col-8">
+                <br />
+                @if (ViewBag.bottleID != null && ViewBag.bottleID != "")
+                {
+                    <p><b>@ViewBag.bottleID</b></p>
+                }
+                else
+                {
+                    <p><b>---</b></p>
+                }
+
                 <p><b>@ViewBag.collectedDate</b></p>
                 <p><b>@ViewBag.location</b></p>
                 <p><b>@ViewBag.sample_pt_name</b></p>
