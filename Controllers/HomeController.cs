@@ -18,8 +18,48 @@ namespace WQSS.Controllers
     {   
         public ActionResult Index()
         {
-           
-            return View();
+            try
+            {
+                // Convert our JSON in into bytes using ascii encoding
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                //byte[] data = encoding.GetBytes(tbJSONdata.Text);
+
+                //  HttpWebRequest 
+                Uri url = new Uri("https://limsstgweb01.pub.gov.sg/starlims11.uat/REST_API.WQSS.LIMS");
+                HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
+                //webrequest.Method = "POST";
+                webrequest.Method = "GET";
+                webrequest.ContentType = "application/x-www-form-urlencoded";
+                webrequest.Headers.Add("STARLIMSUser", "WQSS");
+                webrequest.Headers.Add("STARLIMSPass", "WQSS");
+                webrequest.Headers.Add("WQSS_REQ_ID", "chrom12345wqss1512");
+                webrequest.Headers.Add("WQSS_REQ_NAME", "ROUTINE_FILE");
+
+
+                //  Declare & read the response from service
+                HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
+
+                // Fetch the response from the POST web service
+                Encoding enc = System.Text.Encoding.GetEncoding("utf-8");
+                StreamReader loResponseStream = new StreamReader(webresponse.GetResponseStream(), enc);
+                string result = loResponseStream.ReadToEnd();
+                loResponseStream.Close();
+
+                webresponse.Close();
+                //System.IO.File.WriteAllText(@"E:\Sundar\ConsoleApplicationWQSS\WQSS.csv", result);
+                //Console.Write(result);
+                ViewBag.output = result;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("error" + ex.ToString());
+                ViewBag.output = ex.ToString();
+                return View();
+                //throw;
+            }
+
 
         }
 
@@ -249,7 +289,27 @@ namespace WQSS.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            try
+            {
+                using (var context = new PUBWQSSEntities())
+                {
+                    var query = context.dbo_Request.Where(s => s.ObjectID == "test").FirstOrDefault<dbo_Request>();
+
+                    if (query != null)
+                    {
+                        ViewBag.output1 = query.ObjectID;
+                        ViewBag.output2 = query.Response;
+                        ViewBag.output3 = query.Result;
+                        ViewBag.output4 = query.LIMS_REQS_ID;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("error" + ex.ToString());
+                ViewBag.output = ex.ToString();
+                //throw;
+            }
 
             return View();
         }
