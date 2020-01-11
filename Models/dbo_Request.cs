@@ -11,22 +11,13 @@ namespace WQSS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     
-    public partial class dbo_Request : PUBWQSSEntities
+    public partial class dbo_Request
     {
-        [MaxLength(50)]
         public string ObjectID { get; set; }
-        [MaxLength(50)]
         public string WQSS_REQ_ID { get; set; }
-        [MaxLength(50)]
         public string LIMS_REQS_ID { get; set; }
-        [MaxLength(50)]
         public string Response { get; set; }
-        [MaxLength(50)]
         public string Result { get; set; }
-        
     }
-
-    
 }

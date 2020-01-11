@@ -8,7 +8,12 @@
     <div id="barcodeTarget" class="barcodeTarget"></div>
     <br />
 </div>
-<p class="card-text">Please verify all information on the label is correct before printing.</p>
+
+@if ((ViewBag.Error_1_message == "Login Successful" & ViewBag.Error_2_message == "Retrieve Successful") || ViewBag.bottleID != "")
+{
+    <p class="card-text">The Sample  has been successfully logged into LIMS</p>
+}
+<p class="card-text">Please verify that all information on the label is correct before printing.</p>
 <div class="card mb-3">
     <div class="card-body">
         <div class="row">

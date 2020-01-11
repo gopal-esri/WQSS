@@ -25,14 +25,14 @@ namespace WQSS.Controllers
                 //byte[] data = encoding.GetBytes(tbJSONdata.Text);
 
                 //  HttpWebRequest 
-                Uri url = new Uri("https://limsstgweb01.pub.gov.sg/starlims11.uat/REST_API.WQSS.LIMS");
+                Uri url = new Uri(WebConfigurationManager.AppSettings["LIMS_URL"]);
                 HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
                 //webrequest.Method = "POST";
                 webrequest.Method = "GET";
                 webrequest.ContentType = "application/x-www-form-urlencoded";
                 webrequest.Headers.Add("STARLIMSUser", "WQSS");
                 webrequest.Headers.Add("STARLIMSPass", "WQSS");
-                webrequest.Headers.Add("WQSS_REQ_ID", "chrom12345wqss1512");
+                webrequest.Headers.Add("WQSS_REQ_ID", "chrom12345wqss1912");
                 webrequest.Headers.Add("WQSS_REQ_NAME", "ROUTINE_FILE");
 
 
@@ -150,6 +150,10 @@ namespace WQSS.Controllers
                 parameters.Add("WQSS_LOCATION", loc ?? "");
                 parameters.Add("WQSS_POINT", spm ?? "");
                 parameters.Add("WQSS_PROGRAM", prg ?? "");
+
+                parameters.Add("WQSS_POSTAL_CODE", postal ?? "nil");
+                parameters.Add("WQSS_BF_AF", bfaf ?? "nil");
+                parameters.Add("WQSS_IS_DS", isds ?? "nil");
 
                 // Login_Routine Query
                 var result_from_lims = "";
@@ -379,8 +383,12 @@ namespace WQSS.Controllers
             // Optional Parameter
             if (input["WQSS_REQ_NAME"] == "LOGIN_ADHOC")
             {
+                
                 //input["sth"] ?? webrequest.Headers.Add("sth", input["sth"]);
                 webrequest.Headers.Add("WQSS_SAMPLE_NO", "1");
+                if (input["WQSS_POSTAL_CODE"] != "nil") { webrequest.Headers.Add("WQSS_POSTAL_CODE", input["WQSS_POSTAL_CODE"]); }
+                if (input["WQSS_BF_AF"] != "nil") { webrequest.Headers.Add("WQSS_BF_AF", input["WQSS_BF_AF"]); }
+                if (input["WQSS_IS_DS"] != "nil") { webrequest.Headers.Add("WQSS_IS_DS", input["WQSS_IS_DS"]); }
             }
 
 

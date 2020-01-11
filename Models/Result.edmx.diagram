@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b8b1bcd7f15f4c3f9a70b19fd492cd91" Name="Diagram1">
-        <EntityTypeShape EntityType="PUBWQSSModel.dbo_Request" Width="1.625" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PUBWQSSModel.dbo_Request" Width="1.625" PointX="1.25" PointY="1" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -22,26 +22,6 @@ namespace WQSS.Models
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<dbo_Request>()
-                .Property(p => p.ObjectID)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<dbo_Request>()
-                .Property(p => p.WQSS_REQ_ID)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<dbo_Request>()
-                .Property(p => p.LIMS_REQS_ID)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<dbo_Request>()
-                .Property(p => p.Response)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<dbo_Request>()
-                .Property(p => p.Result)
-                .HasMaxLength(100);
-
             throw new UnintentionalCodeFirstException();
         }
     

@@ -4,22 +4,31 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PUBWQSSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PUBWQSSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PUBWQSS.dbo.dbo.Request' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="dbo_Request">
           <Key>
             <PropertyRef Name="ObjectID" />
           </Key>
-          <Property Name="ObjectID" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="WQSS_REQ_ID" Type="nchar" MaxLength="10" />
-          <Property Name="LIMS_REQS_ID" Type="nchar" MaxLength="10" />
-          <Property Name="Response" Type="nchar" MaxLength="10" />
-          <Property Name="Result" Type="nchar" MaxLength="10" />
+          <Property Name="ObjectID" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="WQSS_REQ_ID" Type="nvarchar(max)" />
+          <Property Name="LIMS_REQS_ID" Type="nvarchar(max)" />
+          <Property Name="Response" Type="nvarchar(max)" />
+          <Property Name="Result" Type="nvarchar(max)" />
         </EntityType>
         <EntityContainer Name="PUBWQSSModelStoreContainer">
-          <EntitySet Name="dbo_Request" EntityType="Self.dbo_Request" Schema="dbo" Table="dbo.Request" store:Type="Tables" />
+          <EntitySet Name="dbo_Request" EntityType="Self.dbo_Request" store:Type="Tables" store:Schema="dbo" store:Name="dbo.Request">
+            <DefiningQuery>SELECT 
+    [dbo_Request].[ObjectID] AS [ObjectID], 
+    [dbo_Request].[WQSS_REQ_ID] AS [WQSS_REQ_ID], 
+    [dbo_Request].[LIMS_REQS_ID] AS [LIMS_REQS_ID], 
+    [dbo_Request].[Response] AS [Response], 
+    [dbo_Request].[Result] AS [Result]
+    FROM [dbo].[dbo.Request] AS [dbo_Request]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PUBWQSSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -27,11 +36,11 @@
           <Key>
             <PropertyRef Name="ObjectID" />
           </Key>
-          <Property Name="ObjectID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="WQSS_REQ_ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="LIMS_REQS_ID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Response" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Result" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ObjectID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WQSS_REQ_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LIMS_REQS_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Response" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="PUBWQSSEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="dbo_Request" EntityType="Self.dbo_Request" />
