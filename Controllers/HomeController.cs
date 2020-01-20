@@ -46,15 +46,12 @@ namespace WQSS.Controllers
                 loResponseStream.Close();
 
                 webresponse.Close();
-                //System.IO.File.WriteAllText(@"E:\Sundar\ConsoleApplicationWQSS\WQSS.csv", result);
-                //Console.Write(result);
                 ViewBag.output = result;
 
                 return View();
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("error" + ex.ToString());
                 ViewBag.output = ex.ToString();
                 return View();
                 //throw;
@@ -66,6 +63,9 @@ namespace WQSS.Controllers
         public ActionResult Label(string objID, string sch, string matrix, string loc, string prg, string postal, 
                                     string bfaf, string isds, string login, string sampleID, string spm, string ros,string type)
         {
+            // Offline Test Mode
+            bool test_mode = false;
+
             // Default data passed to label
             ViewBag.logo = Generate_Logo();
             ViewBag.logo2 = Generate_Logo_2();
@@ -128,7 +128,11 @@ namespace WQSS.Controllers
                                         data.Response = "RECEIVED";
                                         context.SaveChanges();
                                     }
-                                    catch { }
+                                    catch (Exception ex)
+                                    {
+                                        ViewBag.output = ex.ToString();
+                                        return View();
+                                    }
 
                                     return View();
                                 }
@@ -136,7 +140,10 @@ namespace WQSS.Controllers
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    ViewBag.output = ex.ToString();
+                }
 
 
                 // Sample ID is not in DB, Generating parameters to query REST
@@ -158,15 +165,23 @@ namespace WQSS.Controllers
                 // Login_Routine Query
                 var result_from_lims = "";
                 var lims_req_id = "";
+
                 try
                 {
-                    Dictionary<string, string> result = Request_Login(parameters);
-                    /*
-                    Dictionary<string, string> result = new Dictionary<string, string>
+                    Dictionary<string, string> result = new Dictionary<string, string>();
+                    if (test_mode == false)
                     {
-                        {"Response","PENDING"},
-                        {"LIMS_REQ_ID","123-234-345"}
-                    };*/
+                        result = Request_Login(parameters);
+                    }
+                    else
+                    {
+                        result = new Dictionary<string, string>
+                        {
+                            {"Response","PENDING"},
+                            {"LIMS_REQ_ID","123-234-345"}
+                        };
+                    }
+                    
                     
 
                     result_from_lims = result["Response"].Replace("\"", "");
@@ -212,7 +227,12 @@ namespace WQSS.Controllers
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    ViewBag.output = ex.ToString();
+                    return View();
+                    //throw;
+                }
 
 
                 var retry = 0;
@@ -221,8 +241,14 @@ namespace WQSS.Controllers
                     if (retry < 3)
                     {
                         System.Threading.Thread.Sleep(3000);
-                        result_from_lims = Get_Sample_ID($"LOGIN_{objID}_ID", lims_req_id).Replace("\"", "");
-                        //result_from_lims = test();
+                        if (test_mode == false)
+                        {
+                            result_from_lims = Get_Sample_ID($"LOGIN_{objID}_ID", lims_req_id).Replace("\"", "");
+                        }
+                        else
+                        {
+                            result_from_lims = test();
+                        }
 
                         retry++;
                     }
@@ -250,7 +276,10 @@ namespace WQSS.Controllers
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    ViewBag.output = ex.ToString();
+                }
 
                 //Pass data to view
                 ViewBag.data_matrix = Generate_Code(result_from_lims);
@@ -310,7 +339,6 @@ namespace WQSS.Controllers
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("error" + ex.ToString());
                 ViewBag.output = ex.ToString();
                 //throw;
             }
