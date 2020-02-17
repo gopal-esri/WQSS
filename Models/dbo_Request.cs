@@ -19,5 +19,6 @@ namespace WQSS.Models
         public string LIMS_REQS_ID { get; set; }
         public string Response { get; set; }
         public string Result { get; set; }
+        public string Uploaded { get; set; }
     }
 }

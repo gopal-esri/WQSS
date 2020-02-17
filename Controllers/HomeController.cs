@@ -220,7 +220,8 @@ namespace WQSS.Controllers
                                 ObjectID = objID,
                                 WQSS_REQ_ID = "LOGIN_" + objID,
                                 LIMS_REQS_ID = lims_req_id,
-                                Response = result_from_lims
+                                Response = result_from_lims,
+                                Uploaded = "no"
                             };
                             context.dbo_Request.Add(data);
                             context.SaveChanges();
