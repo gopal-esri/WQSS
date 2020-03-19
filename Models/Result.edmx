@@ -32,7 +32,6 @@
           <Property Name="LIMS_REQS_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Response" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Uploaded" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="PUBWQSSEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="dbo_Request" EntityType="Self.dbo_Request" />
@@ -46,7 +45,6 @@
           <EntitySetMapping Name="dbo_Request">
             <EntityTypeMapping TypeName="PUBWQSSModel.dbo_Request">
               <MappingFragment StoreEntitySet="dbo_Request">
-                <ScalarProperty Name="Uploaded" ColumnName="Uploaded" />
                 <ScalarProperty Name="ObjectID" ColumnName="ObjectID" />
                 <ScalarProperty Name="WQSS_REQ_ID" ColumnName="WQSS_REQ_ID" />
                 <ScalarProperty Name="LIMS_REQS_ID" ColumnName="LIMS_REQS_ID" />
