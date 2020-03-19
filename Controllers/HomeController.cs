@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -9,8 +8,7 @@ using System.Text;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using WQSS.Models;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
+using Serilog;
 
 namespace WQSS.Controllers
 {
@@ -63,6 +61,16 @@ namespace WQSS.Controllers
         public ActionResult Label(string objID, string sch, string matrix, string loc, string prg, string postal, 
                                     string bfaf, string isds, string login, string sampleID, string spm, string ros,string type)
         {
+            string currentDateTime = DateTime.Now.ToString().Replace(":", "_").Replace("/", "_").Replace(" ", "_");
+            var logPath = System.Web.Hosting.HostingEnvironment.MapPath($"~/Logs/log_{currentDateTime}.txt");
+            var dataLog = new LoggerConfiguration()
+                .WriteTo.File(logPath)
+                .CreateLogger();
+
+            dataLog.Information("User clicked the URL");
+            dataLog.Information($"Contents from URL:\n" + $"Object ID is {objID}\n" + $"sch is {sch}\n" + $"matrix is {matrix}\n" + $"location is {loc}\n" + $"program is {prg}\n"
+                + $"postal is {postal}\n" + $"bfaf ID is {bfaf}\n" + $"isds ID is {isds}\n" + $"sample ID is {sampleID}\n" + $"spm is {spm}\n" + $"ros is {ros}\n" + $"type is {type}");
+
             // Offline Test Mode
             bool test_mode = false;
 
@@ -94,6 +102,7 @@ namespace WQSS.Controllers
                 };
 
                 // Check if sample ID is already obtained. If so, fetch from DB and print.
+                dataLog.Information($"Checking DB for existing records with Object ID : {objID}");
                 try
                 {
                     using (var context = new PUBWQSSEntities())
@@ -102,23 +111,27 @@ namespace WQSS.Controllers
 
                         if (query.Result != null)
                         {
+                            dataLog.Information($"Login Exist");
                             if (query.Result != "PENDING" && query.Result != "Processing")
                             {
                                 ViewBag.Error_1_message = "Login Successful";
                                 ViewBag.Error_2_message = "Retrieve Successful";
                                 ViewBag.data_matrix = Generate_Code(query.Result);
                                 ViewBag.bottleID = query.Result;
+                                dataLog.Information($"Sample ID is present ... {query.Result}");
                                 return View();
                             }
                             else
                             {
                                 var result = Get_Sample_ID($"LOGIN_{objID}_ID", query.LIMS_REQS_ID).Replace("\"", "");
+                                dataLog.Information($"No Sample ID is present, Requesting for sample ID...");
                                 if (result != "Processing" || result != "PENDING")
                                 {
                                     ViewBag.Error_1_message = "Login Successful";
                                     ViewBag.Error_2_message = "Retrieve Successful";
                                     ViewBag.data_matrix = Generate_Code(result);
                                     ViewBag.bottleID = result;
+                                    dataLog.Information($"Sample retrieved... {result}");
 
                                     try
                                     {
@@ -127,9 +140,12 @@ namespace WQSS.Controllers
                                         data.Result = result;
                                         data.Response = "RECEIVED";
                                         context.SaveChanges();
+                                        dataLog.Information($"Saved sample ID : {result} into Database");
                                     }
                                     catch (Exception ex)
                                     {
+                                        dataLog.Information($"Error writing to DB");
+                                        dataLog.Information($"{ex.ToString()}");
                                         ViewBag.output = ex.ToString();
                                         return View();
                                     }
@@ -142,10 +158,12 @@ namespace WQSS.Controllers
                 }
                 catch (Exception ex)
                 {
+                    dataLog.Information($"Error at DB");
+                    dataLog.Information($"{ex.ToString()}");
                     ViewBag.output = ex.ToString();
                 }
 
-
+                dataLog.Information($"No Records Found. Creating a new Login Request");
                 // Sample ID is not in DB, Generating parameters to query REST
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
 
@@ -172,6 +190,7 @@ namespace WQSS.Controllers
                     if (test_mode == false)
                     {
                         result = Request_Login(parameters);
+                        dataLog.Information($"Login_Request... Result : {result["Response"].Replace("\"", "")} LIMS_REQ_ID : {result["LIMS_REQ_ID"].Replace("\"", "")}");
                     }
                     else
                     {
@@ -193,6 +212,7 @@ namespace WQSS.Controllers
                         ViewBag.Error_1_message = "Failed to Login Request" + result_from_lims;
                         ViewBag.Error_2_message = "-";
                         ViewBag.bottleID = "";
+                        dataLog.Information($"Failed to Login. Output is : {result_from_lims}");
                         return View();
                     }
                 }
@@ -201,12 +221,14 @@ namespace WQSS.Controllers
                     ViewBag.Error_1_message = "Unable to reach LIMS";
                     ViewBag.Error_2_message = "-";
                     ViewBag.bottleID = "";
+                    dataLog.Information($"Unable to reach LIMS");
                     return View();
                 }
                 ViewBag.Error_1_message = "Login Successful";
-
+                dataLog.Information($"Login Successful");
 
                 // Write to DB 
+                dataLog.Information($"Creating a new record in DB");
                 try
                 {
                     using (var context = new PUBWQSSEntities())
@@ -224,26 +246,30 @@ namespace WQSS.Controllers
                             };
                             context.dbo_Request.Add(data);
                             context.SaveChanges();
+                            dataLog.Information($"New record created. \nObjectID is : {objID} \nWQSS_REQ_ID is : LOGIN_{objID} \nLIMS_REQS_ID is : {lims_req_id} \nResponse is : {result_from_lims}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    dataLog.Information($"Error : {ex.ToString()}");
                     ViewBag.output = ex.ToString();
                     return View();
                     //throw;
                 }
 
-
-                var retry = 0;
+                dataLog.Information($"Requesting for Sample ID");
+                var retry = 1;
                 while (result_from_lims == "PENDING" || result_from_lims == "Processing")
                 {
-                    if (retry < 3)
+                    if (retry < 4)
                     {
+                        dataLog.Information($"Try count = {retry.ToString()} / 3");
                         System.Threading.Thread.Sleep(3000);
                         if (test_mode == false)
                         {
                             result_from_lims = Get_Sample_ID($"LOGIN_{objID}_ID", lims_req_id).Replace("\"", "");
+                            dataLog.Information($"Sample ID Succesfully retrieved : {result_from_lims}");
                         }
                         else
                         {
@@ -256,12 +282,13 @@ namespace WQSS.Controllers
                     {
                         ViewBag.Error_2_message = "Failed to retrieve Sample ID - Please try again in 2 mins";
                         ViewBag.bottleID = "";
+                        dataLog.Information("Failed to retrieve Sample ID in allocated time");
                         return View();
                     }
                 }
                 ViewBag.Error_2_message = "Retrieve Successful";
 
-
+                dataLog.Information("Updating DB with sample id");
                 try
                 {
                     // Update DB
@@ -272,12 +299,14 @@ namespace WQSS.Controllers
                         {
                             data.Result = result_from_lims;
                             data.Response = "RECEIVED";
+                            dataLog.Information($"Database updated. Sample ID is : {result_from_lims}");
                             context.SaveChanges();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    dataLog.Information($"Error : {ex.ToString()}");
                     ViewBag.output = ex.ToString();
                 }
 
@@ -349,6 +378,14 @@ namespace WQSS.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
+            string currentDateTime = DateTime.Now.ToString().Replace(":", "_").Replace("/", "_").Replace(" ", "_");
+            var logPath = System.Web.Hosting.HostingEnvironment.MapPath($"~/Logs/log_{currentDateTime}.txt");
+            var dataLog = new LoggerConfiguration()
+                .WriteTo.File(logPath)
+                .CreateLogger();
+
+            dataLog.Information("this is demo");
+            dataLog.Information($"sth is writen under here\n{ViewBag.Message}");
 
             return View();
         }
