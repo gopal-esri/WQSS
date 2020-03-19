@@ -63,7 +63,7 @@ namespace WQSS.Controllers
         public ActionResult Label(string objID, string sch, string matrix, string loc, string prg, string postal, 
                                     string bfaf, string isds, string login, string sampleID, string spm, string ros,string type)
         {
-            // Offline Test Mode //Setting will be set in the config file in the future
+            // Offline Test Mode
             bool test_mode = false;
 
             // Default data passed to label
@@ -404,23 +404,10 @@ namespace WQSS.Controllers
 
 
             webrequest.Headers.Add("WQSS_SCHEDULE", input ["WQSS_SCHEDULE"]);
-            webrequest.Headers.Add("WQSS_MATRIX", input["WQSS_MATRIX"]);         
+            webrequest.Headers.Add("WQSS_MATRIX", input["WQSS_MATRIX"]);
+            webrequest.Headers.Add("WQSS_LOCATION", input["WQSS_LOCATION"]);
+            webrequest.Headers.Add("WQSS_POINT", input["WQSS_POINT"]);
             webrequest.Headers.Add("WQSS_PROGRAM", input["WQSS_PROGRAM"]);
-
-            //New adhoc parameter added for location and sampling point
-            if (input["WQSS_REQ_NAME"] == "LOGIN_ADHOC")
-            {
-                webrequest.Headers.Add("WQSS_LOCATION", "N/A");
-                webrequest.Headers.Add("WQSS_POINT", "N/A");
-                webrequest.Headers.Add("WQSS_SAMPLING_ADDRESS", input["WQSS_LOCATION"]);
-                webrequest.Headers.Add("WQSS_POINT_OF_SAMPLING", input["WQSS_POINT"]);
-
-            }
-            else
-            {
-                webrequest.Headers.Add("WQSS_LOCATION", input["WQSS_LOCATION"]);
-                webrequest.Headers.Add("WQSS_POINT", input["WQSS_POINT"]);
-            }
 
             // Optional Parameter
             if (input["WQSS_REQ_NAME"] == "LOGIN_ADHOC")
