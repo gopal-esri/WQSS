@@ -393,7 +393,7 @@ namespace WQSS.Controllers
         {
             DataMatrix.net.DmtxImageEncoder encoder = new DataMatrix.net.DmtxImageEncoder();
             Bitmap bmp = encoder.EncodeImage(sampleID);
-            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            bmp.RotateFlip(RotateFlipType.Rotate270FlipXY);
             using (var ms = new MemoryStream())
             {
                 using (var bitmap = new Bitmap(bmp))
