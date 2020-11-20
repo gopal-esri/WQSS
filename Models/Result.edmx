@@ -14,7 +14,6 @@
           <Property Name="LIMS_REQS_ID" Type="nvarchar(max)" />
           <Property Name="Response" Type="nvarchar(max)" />
           <Property Name="Result" Type="nvarchar(max)" />
-          <Property Name="Uploaded" Type="nvarchar(max)" />
         </EntityType>
         <EntityContainer Name="PUBWQSSModelStoreContainer">
           <EntitySet Name="dbo_Request" EntityType="Self.dbo_Request" Schema="dbo" Table="dbo.Request" store:Type="Tables" />

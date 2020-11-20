@@ -377,15 +377,27 @@ namespace WQSS.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-            string currentDateTime = DateTime.Now.ToString().Replace(":", "_").Replace("/", "_").Replace(" ", "_");
-            var logPath = System.Web.Hosting.HostingEnvironment.MapPath($"~/Logs/log_{currentDateTime}.txt");
-            var dataLog = new LoggerConfiguration()
-                .WriteTo.File(logPath)
-                .CreateLogger();
-
-            dataLog.Information("this is demo");
-            dataLog.Information($"sth is writen under here\n{ViewBag.Message}");
+            try
+            {
+                using (var context = new PUBWQSSEntities())
+                {
+                        var data = new dbo_Request()
+                        {
+                            ObjectID = "342erw",
+                            WQSS_REQ_ID = "LOGIN_dfsdf",
+                            LIMS_REQS_ID = "fsdfsdf",
+                            Response = "sdsdsd"
+                        };
+                        context.dbo_Request.Add(data);
+                        context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.output = ex.ToString();
+                return View();
+                //throw;
+            }
 
             return View();
         }
