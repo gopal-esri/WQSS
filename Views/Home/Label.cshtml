@@ -1,4 +1,7 @@
-﻿@{
+﻿@using WQSS.Models
+@model LabelForm
+
+@{
     ViewData["Title"] = "Label";
 }
 
@@ -45,7 +48,7 @@
             </div>
             <div class="col-2">
                 <img src="@ViewBag.logo2" alt="" style="width:160px;height:80px;" /><br />
-                <img src="@ViewBag.logo3" alt="" style="width:160px;height:160px; filter:opacity(100%);" />
+                <img src="@ViewBag.logo3" alt="" style="width:160px;height:160px; filter:opacity(100%);" data-rotate="270" class="rot90" />
                 <p class=" text-muted" style="font-size:x-small;">
                     * The logo is a placeholder.
                 </p>
@@ -53,6 +56,22 @@
         </div>
     </div>
 </div>
+
+@if ((ViewBag.Error_1_message == "Login Successful" & ViewBag.Error_2_message == "Retrieve Successful") || ViewBag.bottleID != "")
+{
+    <div class="text-center img-test">
+        <button class="btn-outline-dark rounded" id="label_btn">Print Label</button>
+    </div>
+    <br />
+    <p class="text-center">Click the button above to print label</p>
+}
+else
+{
+    <p class="text-center">Click on the link to print without Sample ID / QR Code </p>
+    <div class="text-center img-test">
+        <button class="btn-outline-dark rounded" id="label_btn"> Print Label Without QR Code </button>
+    </div>
+}
 
 @if (ViewBag.Error_1_message == "Login Successful")
 {
@@ -74,24 +93,25 @@ else
 }
 
 
-@if ((ViewBag.Error_1_message == "Login Successful" & ViewBag.Error_2_message == "Retrieve Successful") || ViewBag.bottleID != "")
-{
-    <p class="text-center">Click the button below to print label</p>
 
-    <div class="text-center img-test">
-        <button class="btn-outline-dark rounded" id="label_btn">Print Label</button>
-    </div>
-}
-else
-{
-    <p class="text-center">Click on the link to print without Sample ID / QR Code </p>
-    <div class="text-center img-test">
-        <button class="btn-outline-dark rounded" id="label_btn"> Print Label Without QR Code </button>
-    </div>
-}
 
 <p class="text-center"> @ViewBag.outpt</p>
 
+<div class="form">
+    @using (Html.BeginForm("About", "Home", FormMethod.Post, new { @class = "register-form" }))
+    {
+        <p>@Html.TextBoxFor(m => m.SampleID, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.SampleID), @Value = ViewBag.bottleID, style = "display: none;" })</p>
+        <p>@Html.TextBoxFor(m => m.Sample_Pt, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.Sample_Pt), @Value = ViewBag.sample_pt_name, style = "display: none;" })</p>
+        <p>@Html.TextBoxFor(m => m.CollectedDate, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.CollectedDate), @Value = ViewBag.collectedDate, style = "display: none;" })</p>
+        <p>@Html.TextBoxFor(m => m.Reason, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.Reason), @Value = ViewBag.reas_sampling, style = "display: none;" })</p>
+        <p>@Html.TextBoxFor(m => m.Matrix, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.Matrix), @Value = ViewBag.matrix, style = "display: none;" })</p>
+        <p>@Html.TextBoxFor(m => m.Location, new { @class = "", @placeholder = Html.DisplayNameFor(m => m.Location), @Value = ViewBag.location, style = "display: none;" })</p>
+        <br />
+        <div class="text-center img-test">
+            <button class="btn-outline-dark rounded">Generate Next Label >></button>
+        </div>
+    }
+</div>
 
 @section Scripts {
 
@@ -101,6 +121,18 @@ else
 
 
     <script type="text/javascript">
+
+        $('.rot90').each(function () {
+            var deg = $(this).data('rotate') || 0;
+            var rotate = 'rotate(' + $(this).data('rotate') + 'deg)';
+            $(this).css({
+                '-webkit-transform': rotate,
+                '-moz-transform': rotate,
+                '-o-transform': rotate,
+                '-ms-transform': rotate,
+                'transform': rotate
+            });
+        });
 
 			const pdf = new jsPDF({
 				orientation: 'potrait',

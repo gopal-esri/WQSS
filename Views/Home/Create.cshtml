@@ -11,54 +11,58 @@
 
 @using (Html.BeginForm("Create", "Home", FormMethod.Post))
 {
-<div class="card mb-3">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-2">
-                <p class="form-control card-text" style="border:none;">Bottle ID : </p>
-                <p class="form-control card-text" style="border:none;">Collected Date : </p>
-                <p class="form-control card-text" style="border:none;">Location : </p>
-                <p class="form-control card-text" style="border:none;">Sample Pt : </p>
-                <p class="form-control card-text" style="border:none;">Matrix : </p>
-                <p class="form-control card-text" style="border:none;">Reason : </p>
-            </div>
-            <div class="col-8 ">
-                <p>@Html.TextBoxFor(m => m.SampleID, new { @class = "form-control border-bottom", @placeholder = Html.DisplayNameFor(m => m.SampleID) })</p>
-                <p>
-                    <div class="form-inline">
-                        <div class=" row col-4">
-                            @Html.TextBoxFor(m => m.CollectedDate, new { @type = "date", @class = "form-control datepicker", @placeholder = Html.DisplayNameFor(m => m.CollectedDate) })
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <p class="form-control card-text" style="border:none;">Bottle ID : </p>
+                    <p class="form-control card-text" style="border:none;">Collected Date : </p>
+                    <p class="form-control card-text" style="border:none;">Location : </p>
+                    <p class="form-control card-text" style="border:none;">Sample Pt : </p>
+                    <p class="form-control card-text" style="border:none;">Matrix : </p>
+                    <p class="form-control card-text" style="border:none;">Reason : </p>
+                </div>
+                <div class="col-8 ">
+                    <p>@Html.TextBoxFor(m => m.SampleID, new { @class = "form-control border-bottom", @placeholder = Html.DisplayNameFor(m => m.SampleID) })</p>
+                    <p>
+                        <div class="form-inline">
+                            <div class=" row col-4">
+                                @Html.TextBoxFor(m => m.CollectedDate, new { @type = "date", @class = "form-control datepicker", @placeholder = Html.DisplayNameFor(m => m.CollectedDate) })
+                            </div>
+                            <div class="row col-4">
+                                @Html.TextBoxFor(m => m.CollectedTime, new { @type = "time", @class = "form-control timepicker", @placeholder = Html.DisplayNameFor(m => m.CollectedTime) })
+                            </div>
                         </div>
-                        <div class="row col-4">
-                            @Html.TextBoxFor(m => m.CollectedTime, new { @type = "time", @class = "form-control timepicker", @placeholder = Html.DisplayNameFor(m => m.CollectedTime) })
-                        </div>
-                    </div>
-                </p>
-                <p>@Html.TextBoxFor(m => m.Location, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Location) })</p>
-                <p>@Html.TextBoxFor(m => m.Sample_Pt, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Sample_Pt) })</p>
-                <p>@Html.TextBoxFor(m => m.Matrix, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Matrix) })</p>
-                <p>@Html.TextBoxFor(m => m.Reason, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Reason) })</p>
-            </div>
-            <div class="col-2">
-                <br />
-                <img src="@ViewBag.logo2" alt="" style="width:160px;height:80px;" /><br />
-                <img src="@ViewBag.logo3" alt="" style="width:160px;height:160px; filter:opacity(100%);" />
-                <p class=" text-muted" style="font-size:x-small;">
-                    * The logo is a placeholder.
-                </p>
+                    </p>
+                    <p>@Html.TextBoxFor(m => m.Location, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Location) })</p>
+                    <p>@Html.TextBoxFor(m => m.Sample_Pt, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Sample_Pt) })</p>
+                    <p>@Html.TextBoxFor(m => m.Matrix, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Matrix) })</p>
+                    <p>@Html.TextBoxFor(m => m.Reason, new { @class = "form-control", @placeholder = Html.DisplayNameFor(m => m.Reason) })</p>
+                </div>
+                <div class="col-2">
+                    <br />
+                    <img src="@ViewBag.logo2" alt="" style="width:160px;height:80px;" /><br />
+                    <img src="@ViewBag.logo3" alt="" style="width:160px;height:160px; filter:opacity(100%);" />
+                    <p class=" text-muted" style="font-size:x-small;">
+                        * The logo is a placeholder.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
-    <p class="text-center">Click the button below to print label</p>
+    <p class="text-center">Click the button above to print label</p>
 
     <div class="text-center img-test">
-        <input id="Submit " type="submit" value="Generate Label" class="btn-outline-dark rounded" />
+        <input id="generate" type="submit" value="Generate Label" class="btn-outline-dark rounded" />
     </div>
 
+    using (Html.BeginForm("About", "Home", FormMethod.Post, new { @class = "login-form" }))
+    {
+        <input id="next" type="submit" value="Login" />
+    }
 
 }
 
@@ -69,14 +73,15 @@
     <script src="~/Scripts/JS/jquery-barcode.js"></script>
     <script type="text/javascript">
 
+        const pdf = new jsPDF({
+            orientation: 'potrait',
+            unit: 'mm',         //Can put 'in' for inches
+            format: [90, 29]   //The size[width,height]
+
+        });
 
 		if (@ViewBag.status == "1") {
-			const pdf = new jsPDF({
-				orientation: 'potrait',
-				unit: 'mm',         //Can put 'in' for inches
-				format: [90, 29]   //The size[width,height]
-
-			});
+			
 
 			pdf.addFont('times', 'courier');
 			pdf.setFont('times');

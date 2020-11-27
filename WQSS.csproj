@@ -261,9 +261,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Result.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Result.edmx.diagram">
-      <DependentUpon>Result.edmx</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
