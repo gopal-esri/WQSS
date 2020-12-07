@@ -278,7 +278,6 @@
     <Content Include="Scripts\JS\FileSaver.js" />
     <Content Include="Scripts\JS\jquery-barcode.js" />
     <None Include="packages.config" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\JS\jspdf.debug.js" />
     <Content Include="Scripts\JS\jspdf.js" />
@@ -323,6 +322,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
